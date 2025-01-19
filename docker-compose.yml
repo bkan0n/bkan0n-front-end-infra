@@ -1,0 +1,123 @@
+name: bkan0n-front-end-infra
+
+x-doom-networks: &doom-networks
+  networks:
+    - doom-network
+    - caddy-network
+
+x-genji-networks: &genji-networks
+  networks:
+    - genji-network
+    - caddy-network
+
+x-all-networks: &all-networks
+  networks:
+    - doom-network
+    - caddy-network
+    - genji-network
+
+x-only-caddy-network: &only-caddy-network
+  networks:
+    - caddy-network
+
+x-base-settings: &base-settings
+  restart: always
+
+services:
+  uptime-kuma:
+    container_name: uptime-kuma
+    image: louislam/uptime-kuma:1
+    <<: [*base-settings, *all-networks]
+    volumes:
+      - ./uptime-kuma-data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    <<: [*base-settings, *all-networks]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+
+  dozzle-genjipk:
+    container_name: dozzle-genjipk
+    image: amir20/dozzle:latest
+    <<: [*base-settings, *all-networks]
+    environment:
+      - DOZZLE_FILTER="name=genjiparkour_website"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  dash:
+    container_name: dash
+    image: mauricenino/dashdot:latest
+    <<: [*base-settings, *only-caddy-network]
+    privileged: true
+    volumes:
+      - /:/mnt/host:ro
+
+  caddy:
+    build:
+      context: ./caddy
+      dockerfile: Dockerfile
+    container_name: caddy
+    <<: [*base-settings, *all-networks]
+    cap_add:
+      - NET_ADMIN
+    security_opt:
+      - no-new-privileges=true
+    environment:
+      - BASIC_AUTH_PASS
+      - BASIC_AUTH_USER
+      - BKAN0N_COM_CLOUDFLARE_API_TOKEN
+      - CLOUDFLARE_ZONE_TOKEN
+      - CROWDSEC_API_KEY
+      - DOOM_PK_CLOUDFLARE_API_TOKEN
+      - FROMSKYTOCENTER_COM_CLOUDFLARE_API_TOKEN
+      - GENJI_PK_CLOUDFLARE_API_TOKEN
+      - GENJI_PK_LOGS_BASIC_AUTH_PASS
+      - GENJI_PK_LOGS_BASIC_AUTH_USER
+      - GENJI_PK_TEST_WEBSITE_BASIC_AUTH_PASS
+      - GENJI_PK_TEST_WEBSITE_BASIC_AUTH_USER
+      - WAITFORMEIN_SPACE_CLOUDFLARE_API_TOKEN
+
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
+      - caddy-logs:/var/log/caddy
+
+  crowdsec:
+    image: docker.io/crowdsecurity/crowdsec:latest
+    container_name: crowdsec
+    environment:
+      - GID=1000
+      - COLLECTIONS=crowdsecurity/caddy crowdsecurity/http-cve crowdsecurity/whitelist-good-actors
+      - BOUNCER_KEY_CADDY
+    volumes:
+      - crowdsec-db:/var/lib/crowdsec/data/
+      - ./caddy/acquis.yaml:/etc/crowdsec/acquis.yaml
+      - caddy-logs:/var/log/caddy:ro
+    <<: [*base-settings, *all-networks]
+    security_opt:
+      - no-new-privileges=true    
+
+
+networks:
+  caddy-network:
+    external: true
+  doom-network:
+    external: true
+  genji-network:
+    external: true
+
+volumes:
+  caddy-data:
+  caddy-config:
+  crowdsec-db:
+  caddy-logs:

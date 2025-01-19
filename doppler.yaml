@@ -1,0 +1,3 @@
+setup:
+  - project: front-end-infra
+    config: prd
