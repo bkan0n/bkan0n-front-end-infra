@@ -18,9 +18,28 @@ jobs:
           key: ${{ secrets.SERVER_HOST_SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd ${{ secrets.SERVER_REPO_LOCATION }}
-            git pull https://${{secrets.SERVER_HOST_GITHUB_PAT}}@github.com/bkan0n/${{ github.event.repository.name }}.git main
-            cd ${{ github.event.repository.name }} 
+            REPO_DIR="${{ secrets.SERVER_REPO_LOCATION }}"
+            REPO_NAME="${{ github.event.repository.name }}"
+            REPO_URL="https://${{ secrets.SERVER_HOST_GITHUB_PAT }}@github.com/bkan0n/${{ github.event.repository.name }}.git"
+
+            # Ensure base directory exists
+            mkdir -p "$REPO_DIR"
+            cd "$REPO_DIR"
+
+            # Check if the repository exists
+            if [ ! -d "$REPO_NAME/.git" ]; then
+              echo "Repository not found. Cloning..."
+              git clone "$REPO_URL" "$REPO_NAME"
+            else
+              echo "Repository exists. Pulling latest changes..."
+              cd "$REPO_NAME"
+              git pull origin main
+            fi
+
+            # Configure Doppler
             echo ${{ secrets.DOPPLER_TOKEN }} | doppler configure set token --scope /
+
+            # Restart Docker services
+            cd "$REPO_NAME"
             docker compose down >/dev/null
             doppler run -- docker compose up -d
