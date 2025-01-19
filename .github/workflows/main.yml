@@ -38,4 +38,4 @@ jobs:
 
             # Restart Docker services
             docker compose down >/dev/null
-            doppler run -t ${{ secrets.DOPPLER_TOKEN }} --command "docker compose up -d"
+            doppler run -t ${{ secrets.DOPPLER_SERVICE_TOKEN }} --command "docker compose up -d"
