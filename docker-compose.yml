@@ -123,7 +123,7 @@ services:
       - BACKREST_CONFIG=/config/config.json # path for the backrest config file.
       - XDG_CACHE_HOME=/cache # path for the restic cache which greatly improves performance.
       - TZ=America/Los_Angeles # set the timezone for the container, used as the timezone for cron jobs.
-    <<: [*base-settings, *only-caddy-networks]
+    <<: [*base-settings, *only-caddy-network]
 
 
 networks:
