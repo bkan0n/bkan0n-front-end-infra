@@ -1,221 +1,226 @@
 bkan0n.com {
-        tls {
-                dns cloudflare {
-                        zone_token {$CLOUDFLARE_ZONE_TOKEN}
-                        api_token {$BKAN0N_COM_CLOUDFLARE_API_TOKEN}
-                }
-        }
-        reverse_proxy bkan0n:80
+	tls {
+		dns cloudflare {
+			zone_token {$CLOUDFLARE_ZONE_TOKEN}
+			api_token {$BKAN0N_COM_CLOUDFLARE_API_TOKEN}
+		}
+	}
+	reverse_proxy bkan0n:80
 }
 *.bkan0n.com {
-        tls {
-                dns cloudflare {
-                        zone_token {$CLOUDFLARE_ZONE_TOKEN}
-                        api_token {$BKAN0N_COM_CLOUDFLARE_API_TOKEN}
-                }
-        }
+	tls {
+		dns cloudflare {
+			zone_token {$CLOUDFLARE_ZONE_TOKEN}
+			api_token {$BKAN0N_COM_CLOUDFLARE_API_TOKEN}
+		}
+	}
 
-        @www host www.bkan0n.com
-        handle @www {
-                redir https://bkan0n.com{uri}
-        }
+	@www host www.bkan0n.com
+	handle @www {
+		redir https://bkan0n.com{uri}
+	}
 
-        @grafana host grafana.bkan0n.com
-        handle @grafana {
-                basic_auth {
-                        {$BASIC_AUTH_USER} {$BASIC_AUTH_PASS}
-                }
-                reverse_proxy grafana:3000
-        }
+	@grafana host grafana.bkan0n.com
+	handle @grafana {
+		basic_auth {
+			{$BASIC_AUTH_USER} {$BASIC_AUTH_PASS}
+		}
+		reverse_proxy grafana:3000
+	}
 
-        @logs host logs.bkan0n.com
-        handle @logs {
-                basic_auth {
-                        {$BASIC_AUTH_USER} {$BASIC_AUTH_PASS}
-                }
-                reverse_proxy dozzle:8080
-        }
+	@logs host logs.bkan0n.com
+	handle @logs {
+		basic_auth {
+			{$BASIC_AUTH_USER} {$BASIC_AUTH_PASS}
+		}
+		reverse_proxy dozzle:8080
+	}
 
-        @monitor host monitor.bkan0n.com
-        handle @monitor {
-                basic_auth {
-                        {$BASIC_AUTH_USER} {$BASIC_AUTH_PASS}
-                }
-                reverse_proxy dash:3001
-        }
+	@monitor host monitor.bkan0n.com
+	handle @monitor {
+		basic_auth {
+			{$BASIC_AUTH_USER} {$BASIC_AUTH_PASS}
+		}
+		reverse_proxy dash:3001
+	}
 
-        @prometheus host prometheus.bkan0n.com
-        handle @prometheus {
-                basic_auth {
-                        {$BASIC_AUTH_USER} {$BASIC_AUTH_PASS}
-                }
-                reverse_proxy prometheus:9090
-        }
+	@prometheus host prometheus.bkan0n.com
+	handle @prometheus {
+		basic_auth {
+			{$BASIC_AUTH_USER} {$BASIC_AUTH_PASS}
+		}
+		reverse_proxy prometheus:9090
+	}
 
-        @status host status.bkan0n.com
-        handle @status {
-                reverse_proxy uptime-kuma:3001
-        }
+	@status host status.bkan0n.com
+	handle @status {
+		reverse_proxy uptime-kuma:3001
+	}
 
-        @translate host translate.bkan0n.com
-        handle @translate {
-                reverse_proxy libretranslate:5000
-        }
+	@translate host translate.bkan0n.com
+	handle @translate {
+		reverse_proxy libretranslate:5000
+	}
 
-        @analytics host analytics.bkan0n.com
-        handle @analytics {
-                reverse_proxy umami:3000
-        }
+	@analytics host analytics.bkan0n.com
+	handle @analytics {
+		reverse_proxy umami:3000
+	}
 
-        @monitoring host monitoring.bkan0n.com
-        handle @monitoring {
-                reverse_proxy beszel:8090
-        }
+	@monitoring host monitoring.bkan0n.com
+	handle @monitoring {
+		reverse_proxy beszel:8090
+	}
 
-        @webhook host webhook.bkan0n.com
-        handle @webhook {
-                reverse_proxy webhook:8000
-        }
+	@webhook host webhook.bkan0n.com
+	handle @webhook {
+		reverse_proxy webhook:8000
+	}
+
+	@backup host backup.bkan0n.com
+	handle @backup {
+		reverse_proxy backrest:9898
+	}
 }
 
 genji.pk {
-        tls {
-                dns cloudflare {
-                        zone_token {$CLOUDFLARE_ZONE_TOKEN}
-                        api_token {$GENJI_PK_CLOUDFLARE_API_TOKEN}
-                }
-        }
-        reverse_proxy genjiparkour_website-prod:80
+	tls {
+		dns cloudflare {
+			zone_token {$CLOUDFLARE_ZONE_TOKEN}
+			api_token {$GENJI_PK_CLOUDFLARE_API_TOKEN}
+		}
+	}
+	reverse_proxy genjiparkour_website-prod:80
 }
 
 *.genji.pk {
-        tls {
-                dns cloudflare {
-                        zone_token {$CLOUDFLARE_ZONE_TOKEN}
-                        api_token {$GENJI_PK_CLOUDFLARE_API_TOKEN}
-                }
-        }
+	tls {
+		dns cloudflare {
+			zone_token {$CLOUDFLARE_ZONE_TOKEN}
+			api_token {$GENJI_PK_CLOUDFLARE_API_TOKEN}
+		}
+	}
 
-        @www host www.genji.pk
-        handle @www {
-                redir https://genji.pk{uri}
-        }
+	@www host www.genji.pk
+	handle @www {
+		redir https://genji.pk{uri}
+	}
 
-        @api host api.genji.pk
-        handle @api {
-                reverse_proxy genji-api:80
-        }
+	@api host api.genji.pk
+	handle @api {
+		reverse_proxy genji-api:80
+	}
 
-        @logs host logs.genji.pk
-        handle @logs {
-                basic_auth {
-                        ${GENJI_PK_LOGS_BASIC_AUTH_USER} {$GENJI_PK_LOGS_BASIC_AUTH_PASS}
-                }
+	@logs host logs.genji.pk
+	handle @logs {
+		basic_auth {
+			${GENJI_PK_LOGS_BASIC_AUTH_USER} {$GENJI_PK_LOGS_BASIC_AUTH_PASS}
+		}
 
-                reverse_proxy dozzle-genjipk:8080
-        }
+		reverse_proxy dozzle-genjipk:8080
+	}
 
-        @rabbitmq host rabbitmq.genji.pk
-        handle @rabbitmq {
-                reverse_proxy genji-rabbit:15672
-        }
+	@rabbitmq host rabbitmq.genji.pk
+	handle @rabbitmq {
+		reverse_proxy genji-rabbit:15672
+	}
 
-        @test host test.genji.pk
-        handle @test {
-                basic_auth {
-                        {$GENJI_PK_TEST_WEBSITE_BASIC_AUTH_USER} {$GENJI_PK_TEST_WEBSITE_BASIC_AUTH_PASS}
-                }
-                reverse_proxy genjiparkour_website-test:80
-        }
+	@test host test.genji.pk
+	handle @test {
+		basic_auth {
+			{$GENJI_PK_TEST_WEBSITE_BASIC_AUTH_USER} {$GENJI_PK_TEST_WEBSITE_BASIC_AUTH_PASS}
+		}
+		reverse_proxy genjiparkour_website-test:80
+	}
 
-        @glitchtip host glitchtip.genji.pk
-        handle @glitchtip {
-                reverse_proxy glitchtip-web:8000
-        }
+	@glitchtip host glitchtip.genji.pk
+	handle @glitchtip {
+		reverse_proxy glitchtip-web:8000
+	}
 }
 
 doom.pk {
-        tls {
-                dns cloudflare {
-                        zone_token {$CLOUDFLARE_ZONE_TOKEN}
-                        api_token {$DOOM_PK_CLOUDFLARE_API_TOKEN}
-                }
-        }
-        reverse_proxy bkan0n:80
+	tls {
+		dns cloudflare {
+			zone_token {$CLOUDFLARE_ZONE_TOKEN}
+			api_token {$DOOM_PK_CLOUDFLARE_API_TOKEN}
+		}
+	}
+	reverse_proxy bkan0n:80
 }
 
 *.doom.pk {
-        tls {
-                dns cloudflare {
-                        zone_token {$CLOUDFLARE_ZONE_TOKEN}
-                        api_token {$DOOM_PK_CLOUDFLARE_API_TOKEN}
-                }
-        }
+	tls {
+		dns cloudflare {
+			zone_token {$CLOUDFLARE_ZONE_TOKEN}
+			api_token {$DOOM_PK_CLOUDFLARE_API_TOKEN}
+		}
+	}
 
-        @www host www.doom.pk
-        handle @www {
-                redir https://doom.pk{uri}
-        }
+	@www host www.doom.pk
+	handle @www {
+		redir https://doom.pk{uri}
+	}
 
-        @api host api.doom.pk
-        handle @api {
-                reverse_proxy doom-api:80
-        }
+	@api host api.doom.pk
+	handle @api {
+		reverse_proxy doom-api:80
+	}
 
-        @grafana host grafana.doom.pk
-        handle @grafana {
-                basic_auth {
-                        {$BASIC_AUTH_USER} {$BASIC_AUTH_PASS}
-                }
-                reverse_proxy grafana:3000
-        }
+	@grafana host grafana.doom.pk
+	handle @grafana {
+		basic_auth {
+			{$BASIC_AUTH_USER} {$BASIC_AUTH_PASS}
+		}
+		reverse_proxy grafana:3000
+	}
 }
 
 fromskytocenter.com {
-        tls {
-                dns cloudflare {
-                        zone_token {$CLOUDFLARE_ZONE_TOKEN}
-                        api_token {$FROMSKYTOCENTER_COM_CLOUDFLARE_API_TOKEN}
-                }
-        }
-        reverse_proxy fstc-website:80
+	tls {
+		dns cloudflare {
+			zone_token {$CLOUDFLARE_ZONE_TOKEN}
+			api_token {$FROMSKYTOCENTER_COM_CLOUDFLARE_API_TOKEN}
+		}
+	}
+	reverse_proxy fstc-website:80
 }
 
 *.fromskytocenter.com {
-        tls {
-                dns cloudflare {
-                        zone_token {$CLOUDFLARE_ZONE_TOKEN}
-                        api_token {$FROMSKYTOCENTER_COM_CLOUDFLARE_API_TOKEN}
-                }
-        }
+	tls {
+		dns cloudflare {
+			zone_token {$CLOUDFLARE_ZONE_TOKEN}
+			api_token {$FROMSKYTOCENTER_COM_CLOUDFLARE_API_TOKEN}
+		}
+	}
 
-        @www host www.fromskytocenter.com
-        handle @www {
-                redir https://fromskytocenter.com{uri}
-        }
+	@www host www.fromskytocenter.com
+	handle @www {
+		redir https://fromskytocenter.com{uri}
+	}
 }
 
 waitformein.space {
-        tls {
-                dns cloudflare {
-                        zone_token {$CLOUDFLARE_ZONE_TOKEN}
-                        api_token {$WAITFORMEIN_SPACE_CLOUDFLARE_API_TOKEN}
-                }
-        }
+	tls {
+		dns cloudflare {
+			zone_token {$CLOUDFLARE_ZONE_TOKEN}
+			api_token {$WAITFORMEIN_SPACE_CLOUDFLARE_API_TOKEN}
+		}
+	}
 
-        reverse_proxy fstc-website:80
+	reverse_proxy fstc-website:80
 }
 
 *.waitformein.space {
-        tls {
-                dns cloudflare {
-                        zone_token {$CLOUDFLARE_ZONE_TOKEN}
-                        api_token {$WAITFORMEIN_SPACE_CLOUDFLARE_API_TOKEN}
-                }
-        }
+	tls {
+		dns cloudflare {
+			zone_token {$CLOUDFLARE_ZONE_TOKEN}
+			api_token {$WAITFORMEIN_SPACE_CLOUDFLARE_API_TOKEN}
+		}
+	}
 
-        @www host www.waitformein.space
-        handle @www {
-                redir https://fromskytocenter.com{uri}
-        }
+	@www host www.waitformein.space
+	handle @www {
+		redir https://fromskytocenter.com{uri}
+	}
 }
