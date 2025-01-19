@@ -36,10 +36,6 @@ jobs:
               git pull origin main
             fi
 
-            # Configure Doppler
-            echo ${{ secrets.DOPPLER_TOKEN }} | doppler configure set token --scope /
-
             # Restart Docker services
-            cd "$REPO_NAME"
             docker compose down >/dev/null
-            doppler run -- docker compose up -d
+            doppler run -t ${{ secrets.DOPPLER_TOKEN }} -- docker compose up -d
