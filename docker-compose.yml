@@ -101,12 +101,14 @@ services:
       - BOUNCER_KEY_CADDY
     volumes:
       - crowdsec-db:/var/lib/crowdsec/data/
-      - ./caddy/acquis.yaml:/etc/crowdsec/acquis.yaml
+      - ./crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
       - caddy-logs:/var/log/caddy:ro
+      - crowdsec-config:/etc/crowdsec/
     <<: [*base-settings, *all-networks]
     security_opt:
-      - no-new-privileges=true    
-
+      - no-new-privileges=true
+    depends_on:
+      - caddy
 
 networks:
   caddy-network:
@@ -121,3 +123,4 @@ volumes:
   caddy-config:
   crowdsec-db:
   caddy-logs:
+  crowdsec-config:
