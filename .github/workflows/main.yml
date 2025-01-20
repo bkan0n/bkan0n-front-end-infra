@@ -9,3 +9,4 @@ jobs:
   deploy:
     uses:
       bkan0n/bkan0n-deploy-workflow/.github/workflows/main.yml@main
+    secrets: inherit
