@@ -29,7 +29,7 @@ services:
     image: louislam/uptime-kuma:1
     <<: [*base-settings, *all-networks]
     volumes:
-      - ./uptime-kuma-data:/app/data
+      - /home/nebula/bkan0n/appdata/uptime-kuma/data:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
 
   dozzle:
@@ -87,10 +87,10 @@ services:
       - "443:443"
       - "443:443/udp"
     volumes:
-      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
-      - caddy-data:/data
-      - caddy-config:/config
-      - caddy-logs:/var/log/caddy
+      - /home/nebula/bkan0n/repos/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /home/nebula/bkan0n/appdata/caddy/data:/data
+      - /home/nebula/bkan0n/appdata/caddy/config:/config
+      - /home/nebula/bkan0n/appdata/caddy/logs:/var/log/caddy
 
   crowdsec:
     image: docker.io/crowdsecurity/crowdsec:latest
@@ -100,32 +100,15 @@ services:
       - COLLECTIONS=crowdsecurity/caddy crowdsecurity/http-cve crowdsecurity/whitelist-good-actors
       - BOUNCER_KEY_CADDY
     volumes:
-      - crowdsec-db:/var/lib/crowdsec/data/
       - ./crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
-      - caddy-logs:/var/log/caddy:ro
-      - crowdsec-config:/etc/crowdsec/
+      - /home/nebula/bkan0n/appdata/crowdsec/data:/var/lib/crowdsec/data/
+      - /home/nebula/bkan0n/appdata/caddy/logs:/var/log/caddy:ro
+      - /home/nebula/bkan0n/appdata/crowdsec/config:/etc/crowdsec/
     <<: [*base-settings, *all-networks]
     security_opt:
       - no-new-privileges=true
     depends_on:
       - caddy
-
-  backrest:
-    image: garethgeorge/backrest:latest
-    container_name: backrest
-    hostname: backrest
-    volumes:
-      - ./backrest/data:/data
-      - ./backrest/config:/config
-      - ./backrest/cache:/cache
-      # TODO: Add volumes to back up locations
-    environment:
-      - BACKREST_DATA=/data # path for backrest data. restic binary and the database are placed here.
-      - BACKREST_CONFIG=/config/config.json # path for the backrest config file.
-      - XDG_CACHE_HOME=/cache # path for the restic cache which greatly improves performance.
-      - TZ=America/Los_Angeles # set the timezone for the container, used as the timezone for cron jobs.
-    <<: [*base-settings, *only-caddy-network]
-
 
 networks:
   caddy-network:
@@ -138,6 +121,3 @@ networks:
 volumes:
   caddy-data:
   caddy-config:
-  crowdsec-db:
-  caddy-logs:
-  crowdsec-config:
