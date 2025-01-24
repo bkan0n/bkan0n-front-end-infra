@@ -87,7 +87,7 @@ services:
       - "443:443"
       - "443:443/udp"
     volumes:
-      - /home/nebula/bkan0n/repos/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /home/nebula/bkan0n/repos/bkan0n-front-end-infra/caddy/Caddyfile:/etc/caddy/Caddyfile
       - /home/nebula/bkan0n/appdata/caddy/data:/data
       - /home/nebula/bkan0n/appdata/caddy/config:/config
       - /home/nebula/bkan0n/appdata/caddy/logs:/var/log/caddy
@@ -100,7 +100,7 @@ services:
       - COLLECTIONS=crowdsecurity/caddy crowdsecurity/http-cve crowdsecurity/whitelist-good-actors
       - BOUNCER_KEY_CADDY
     volumes:
-      - ./crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
+      - /home/nebula/bkan0n/repos/bkan0n-front-end-infra/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
       - /home/nebula/bkan0n/appdata/crowdsec/data:/var/lib/crowdsec/data/
       - /home/nebula/bkan0n/appdata/caddy/logs:/var/log/caddy:ro
       - /home/nebula/bkan0n/appdata/crowdsec/config:/etc/crowdsec/
