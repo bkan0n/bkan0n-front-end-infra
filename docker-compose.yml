@@ -93,7 +93,7 @@ services:
       - /home/nebula/bkan0n/appdata/caddy/logs:/var/log/caddy
 
   crowdsec:
-    image: docker.io/crowdsecurity/crowdsec:latest
+    image: docker.io/crowdsecurity/crowdsec:v1.6.4
     container_name: crowdsec
     environment:
       - GID=1000
