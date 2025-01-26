@@ -3,6 +3,8 @@ name: Main Deployment
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - caddy/Caddyfile
   workflow_dispatch:
   repository_dispatch:
     types: [ init ]

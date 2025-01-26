@@ -1,0 +1,25 @@
+name: Reload Caddy Config
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - caddy/Caddyfile
+
+
+jobs:
+  deploy:
+    environment: production
+    runs-on: ubuntu-latest
+    steps:       
+      - name: Gracefully reload Caddyfile config
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST_IP }}
+          username: ${{ secrets.SERVER_HOST_USER }}
+          key: ${{ secrets.SERVER_HOST_SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            echo "Updating Caddyfile config."
+            docker exec -w /etc/caddy caddy caddy fmt --overwrite
+            docker exec -w /etc/caddy caddy caddy reload
