@@ -223,4 +223,9 @@ waitformein.space {
 	handle @www {
 		redir https://fromskytocenter.com{uri}
 	}
+
+	@test host test.waitformein.space
+	handle @test {
+		redir https://fromskytocenter.com{uri}
+	}
 }
