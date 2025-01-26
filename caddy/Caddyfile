@@ -1,3 +1,11 @@
+{
+	debug
+	crowdsec {
+		api_url http://crowdsec:8080
+		api_key {$CROWDSEC_API_KEY}
+	}
+}
+
 bkan0n.com {
 	tls {
 		dns cloudflare {
@@ -5,7 +13,13 @@ bkan0n.com {
 			api_token {$BKAN0N_COM_CLOUDFLARE_API_TOKEN}
 		}
 	}
-	reverse_proxy bkan0n:80
+	route {
+		crowdsec
+		reverse_proxy bkan0n:80
+	}
+	log {
+		output file /var/log/caddy/bkan0n_access.log
+	}
 }
 *.bkan0n.com {
 	tls {
@@ -90,7 +104,13 @@ genji.pk {
 			api_token {$GENJI_PK_CLOUDFLARE_API_TOKEN}
 		}
 	}
-	reverse_proxy genjiparkour_website-prod:80
+	route {
+		crowdsec
+		reverse_proxy genjiparkour_website-prod:8
+	}
+	log {
+		output file /var/log/caddy/genji_access.log
+	}
 }
 
 *.genji.pk {
@@ -146,7 +166,15 @@ doom.pk {
 			api_token {$DOOM_PK_CLOUDFLARE_API_TOKEN}
 		}
 	}
-	reverse_proxy bkan0n:80
+
+	route {
+		crowdsec
+		reverse_proxy bkan0n:80
+	}
+
+	log {
+		output file /var/log/caddy/doom_access.log
+	}
 }
 
 *.doom.pk {
@@ -183,7 +211,15 @@ fromskytocenter.com {
 			api_token {$FROMSKYTOCENTER_COM_CLOUDFLARE_API_TOKEN}
 		}
 	}
-	reverse_proxy fstc-website:80
+
+	route {
+		crowdsec
+		reverse_proxy fstc-website:80
+	}
+
+	log {
+		output file /var/log/caddy/fstc_access.log
+	}
 }
 
 *.fromskytocenter.com {
@@ -208,7 +244,14 @@ waitformein.space {
 		}
 	}
 
-	reverse_proxy fstc-website:80
+	route {
+		crowdsec
+		reverse_proxy fstc-website:80
+	}
+
+	log {
+		output file /var/log/caddy/waitformeinspace_access.log
+	}
 }
 
 *.waitformein.space {
