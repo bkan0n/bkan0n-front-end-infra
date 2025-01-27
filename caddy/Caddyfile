@@ -53,7 +53,8 @@ bkan0n.com {
 
 	@status host status.bkan0n.com
 	handle @status {
-		reverse_proxy uptime-kuma:3001
+		#reverse_proxy uptime-kuma:3001
+		reverse_proxy authentik:9000
 	}
 
 	@translate host translate.bkan0n.com
