@@ -22,9 +22,6 @@ bkan0n.com {
 
 	@grafana host grafana.bkan0n.com
 	handle @grafana {
-		basic_auth {
-			{$BASIC_AUTH_USER} {$BASIC_AUTH_PASS}
-		}
 		reverse_proxy grafana:3000
 	}
 
@@ -44,12 +41,9 @@ bkan0n.com {
 		reverse_proxy dash:3001
 	}
 
-	@prometheus host prometheus.bkan0n.com
-	handle @prometheus {
-		basic_auth {
-			{$BASIC_AUTH_USER} {$BASIC_AUTH_PASS}
-		}
-		reverse_proxy prometheus:9090
+	@loki host loki.bkan0n.com
+	handle @loki {
+		reverse_proxy loki:3100
 	}
 
 	@status host status.bkan0n.com
