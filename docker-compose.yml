@@ -81,7 +81,6 @@ services:
       - GENJI_PK_TEST_WEBSITE_BASIC_AUTH_PASS
       - GENJI_PK_TEST_WEBSITE_BASIC_AUTH_USER
       - WAITFORMEIN_SPACE_CLOUDFLARE_API_TOKEN
-
     ports:
       - "80:80"
       - "443:443"
@@ -91,6 +90,9 @@ services:
       - /home/nebula/bkan0n/appdata/caddy/data:/data
       - /home/nebula/bkan0n/appdata/caddy/config:/config
       - /home/nebula/bkan0n/appdata/caddy/logs:/var/log/caddy
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
 
   crowdsec:
     image: docker.io/crowdsecurity/crowdsec:v1.6.4
