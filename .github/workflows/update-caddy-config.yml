@@ -8,10 +8,12 @@ on:
 
 
 jobs:
+
   deploy:
     environment: production
     runs-on: ubuntu-latest
     steps:       
+    
       - name: Gracefully reload Caddyfile config
         uses: appleboy/ssh-action@master
         with:
@@ -20,6 +22,8 @@ jobs:
           key: ${{ secrets.SERVER_HOST_SSH_PRIVATE_KEY }}
           port: 22
           script: |
+            cd ~/bkan0n/repos/bkan0n-front-end-infra
+            git pull origin main
             echo "Updating Caddyfile config."
             docker exec -w /etc/caddy caddy caddy fmt --overwrite
             docker exec -w /etc/caddy caddy caddy reload
