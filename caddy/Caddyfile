@@ -4,7 +4,7 @@
 	forward_auth authentik:9000 {
 		uri /outpost.goauthentik.io/auth/caddy
 		copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Email X-Authentik-Name X-Authentik-Uid X-Authentik-Jwt X-Authentik-Meta-Jwks X-Authentik-Meta-Outpost X-Authentik-Meta-Provider X-Authentik-Meta-App X-Authentik-Meta-Version
-		#trusted_proxies private_ranges
+		trusted_proxies private_ranges
 	}
 }
 
@@ -37,23 +37,12 @@ bkan0n.com {
 
 	@grafana host grafana.bkan0n.com
 	handle @grafana {
-		import authenticate
 		reverse_proxy grafana:3000
-	}
-
-	@logs host logs.bkan0n.com
-	handle @logs {
-		basic_auth {
-			{$BASIC_AUTH_USER} {$BASIC_AUTH_PASS}
-		}
-		reverse_proxy dozzle:8080
 	}
 
 	@monitor host monitor.bkan0n.com
 	handle @monitor {
-		basic_auth {
-			{$BASIC_AUTH_USER} {$BASIC_AUTH_PASS}
-		}
+		import authenticate
 		reverse_proxy dash:3001
 	}
 
@@ -64,8 +53,6 @@ bkan0n.com {
 
 	@status host status.bkan0n.com
 	handle @status {
-		import authenticate
-
 		reverse_proxy uptime-kuma:3001
 	}
 
@@ -74,24 +61,9 @@ bkan0n.com {
 		reverse_proxy libretranslate:5000
 	}
 
-	@analytics host analytics.bkan0n.com
-	handle @analytics {
-		reverse_proxy umami:3000
-	}
-
-	@monitoring host monitoring.bkan0n.com
-	handle @monitoring {
-		reverse_proxy beszel:8090
-	}
-
 	@webhook host webhook.bkan0n.com
 	handle @webhook {
 		reverse_proxy webhook:8000
-	}
-
-	@backup host backup.bkan0n.com
-	handle @backup {
-		reverse_proxy backrest:9898
 	}
 }
 
@@ -123,15 +95,6 @@ genji.pk {
 		reverse_proxy genji-api:80
 	}
 
-	@logs host logs.genji.pk
-	handle @logs {
-		basic_auth {
-			${GENJI_PK_LOGS_BASIC_AUTH_USER} {$GENJI_PK_LOGS_BASIC_AUTH_PASS}
-		}
-
-		reverse_proxy dozzle-genjipk:8080
-	}
-
 	@rabbitmq host rabbitmq.genji.pk
 	handle @rabbitmq {
 		reverse_proxy genji-rabbit:15672
@@ -139,15 +102,8 @@ genji.pk {
 
 	@test host test.genji.pk
 	handle @test {
-		basic_auth {
-			{$GENJI_PK_TEST_WEBSITE_BASIC_AUTH_USER} {$GENJI_PK_TEST_WEBSITE_BASIC_AUTH_PASS}
-		}
+		import authenticate
 		reverse_proxy genjiparkour_website-test:80
-	}
-
-	@glitchtip host glitchtip.genji.pk
-	handle @glitchtip {
-		reverse_proxy glitchtip-web:8000
 	}
 }
 
@@ -177,14 +133,6 @@ doom.pk {
 	@api host api.doom.pk
 	handle @api {
 		reverse_proxy doom-api:80
-	}
-
-	@grafana host grafana.doom.pk
-	handle @grafana {
-		basic_auth {
-			{$BASIC_AUTH_USER} {$BASIC_AUTH_PASS}
-		}
-		reverse_proxy grafana:3000
 	}
 }
 
@@ -233,11 +181,6 @@ waitformein.space {
 
 	@www host www.waitformein.space
 	handle @www {
-		redir https://fromskytocenter.com{uri}
-	}
-
-	@test host test.waitformein.space
-	handle @test {
 		redir https://fromskytocenter.com{uri}
 	}
 }
