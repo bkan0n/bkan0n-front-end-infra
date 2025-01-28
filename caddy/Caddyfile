@@ -1,3 +1,13 @@
+(authenticate) {
+	reverse_proxy /outpost.goauthentik.io/* authentik:9000
+
+	forward_auth authentik:9000 {
+		uri /outpost.goauthentik.io/auth/caddy
+		copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Email X-Authentik-Name X-Authentik-Uid X-Authentik-Jwt X-Authentik-Meta-Jwks X-Authentik-Meta-Outpost X-Authentik-Meta-Provider X-Authentik-Meta-App X-Authentik-Meta-Version
+		#trusted_proxies private_ranges
+	}
+}
+
 bkan0n.com {
 	tls {
 		dns cloudflare {
@@ -17,7 +27,7 @@ bkan0n.com {
 
 	@authentik host authentik.bkan0n.com
 	handle @authentik {
-		reverse_proxy authentik:9000
+		reverse_proxy authentik:9000[
 	}
 
 	@www host www.bkan0n.com
@@ -53,24 +63,8 @@ bkan0n.com {
 
 	@status host status.bkan0n.com
 	handle @status {
-		#reverse_proxy uptime-kuma:3001
-		# reverse_proxy authentik:9000
+		import authenticate
 
-		# always forward outpost path to actual outpost
-		# reverse_proxy /outpost.goauthentik.io/* authentik:9000
-
-		# forward authentication to outpost
-		forward_auth authentik:9000 {
-			uri /outpost.goauthentik.io/auth/caddy
-
-			# capitalization of the headers is important, otherwise they will be empty
-			copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Email X-Authentik-Name X-Authentik-Uid X-Authentik-Jwt X-Authentik-Meta-Jwks X-Authentik-Meta-Outpost X-Authentik-Meta-Provider X-Authentik-Meta-App X-Authentik-Meta-Version
-
-			# optional, in this config trust all private ranges, should probably be set to the outposts IP
-			# trusted_proxies private_ranges
-		}
-
-		# actual site configuration below, for example
 		reverse_proxy uptime-kuma:3001
 	}
 
