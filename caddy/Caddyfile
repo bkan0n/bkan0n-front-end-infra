@@ -27,7 +27,7 @@ bkan0n.com {
 
 	@authentik host authentik.bkan0n.com
 	handle @authentik {
-		reverse_proxy authentik:9000[
+		reverse_proxy authentik:9000
 	}
 
 	@www host www.bkan0n.com
