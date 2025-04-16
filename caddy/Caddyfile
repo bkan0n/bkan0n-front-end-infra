@@ -1,6 +1,10 @@
 {
-	debug
+	log {
+		level DEBUG
+		output stdout
+	}
 }
+
 (authenticate) {
 	reverse_proxy /outpost.goauthentik.io/* authentik:9000
 
