@@ -1,3 +1,6 @@
+{
+	debug
+}
 (authenticate) {
 	reverse_proxy /outpost.goauthentik.io/* authentik:9000
 
