@@ -54,6 +54,12 @@ bkan0n.com {
 		reverse_proxy prometheus:9090
 	}
 
+	@cadvisor host cadvisor.bkan0n.com
+	handle @cadvisor {
+		import authenticate
+		reverse_proxy cadvisor:8080
+	}
+
 	@monitor host monitor.bkan0n.com
 	handle @monitor {
 		import authenticate
