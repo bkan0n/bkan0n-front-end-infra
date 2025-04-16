@@ -40,6 +40,12 @@ bkan0n.com {
 		reverse_proxy grafana:3000
 	}
 
+	@prometheus host prometheus.bkan0n.com
+	handle @prometheus {
+		import authenticate
+		reverse_proxy prometheus:9090
+	}
+
 	@monitor host monitor.bkan0n.com
 	handle @monitor {
 		import authenticate
