@@ -42,7 +42,6 @@ bkan0n.com {
 
 	@prometheus host prometheus.bkan0n.com
 	handle @prometheus {
-		import authenticate
 		reverse_proxy prometheus:9090
 	}
 
