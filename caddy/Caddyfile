@@ -85,6 +85,11 @@ bkan0n.com {
 	handle @webhook {
 		reverse_proxy webhook:8000
 	}
+
+	@bytebase host bytebase.bkan0n.com
+	handle @bytebase {
+		reverse_proxy bytebase:8080
+	}
 }
 
 genji.pk {
