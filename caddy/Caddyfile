@@ -120,6 +120,11 @@ genji.pk {
 		reverse_proxy genji-api:80
 	}
 
+	@apitest host apitest.genji.pk
+	handle @apitest {
+		reverse_proxy genji-api-test:80
+	}
+
 	@rabbitmq host rabbitmq.genji.pk
 	handle @rabbitmq {
 		reverse_proxy genji-rabbit:15672
