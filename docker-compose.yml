@@ -21,7 +21,7 @@ x-only-caddy-network: &only-caddy-network
     - caddy-network
 
 x-base-settings: &base-settings
-  restart: always
+  restart: unless-stopped
 
 services:
   uptime-kuma:
